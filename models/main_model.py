@@ -13,6 +13,9 @@ class Director:
         if isinstance(other,Director):
             return self.nombre == other.nombre and self.id == other.id
         return False
+    
+    def __hash__(self):
+        return hash((self.id, self.nombre))
 
 class DAO(ABC):
     """
