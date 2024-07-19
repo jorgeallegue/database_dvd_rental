@@ -44,3 +44,15 @@ def test_asigna_director_a_pelicula():
     assert pelicula.id == -1
     assert pelicula.director == director
     assert pelicula._id_director == 9
+
+def test_asigna_director_a_pelicula():
+    pelicula = Pelicula("El señor de los anillos", "Sauron es muy malo", -1)
+    director = Director("Peter Jackson", 9)
+    pelicula.director = director
+
+    assert pelicula.titulo == "El señor de los anillos"
+    assert pelicula.sinopsis == "Sauron es muy malo"
+    assert pelicula.id == -1
+    assert pelicula.director == director
+    assert pelicula._id_director == 9
+    assert pelicula.director.nombre == "Peter Jackson"
