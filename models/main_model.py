@@ -16,6 +16,28 @@ class Director:
     
     def __hash__(self):
         return hash((self.id, self.nombre))
+    
+class Pelicula:
+    def __init__(self, titulo: str, sinopsis: str, director: object, id: int = -1):
+        self.titulo = titulo
+        self.sinopsis = sinopsis
+        self.id = id
+        self.director = director
+    
+    @property
+    def director(self):
+        return self._director
+    
+    @director.setter
+    def director(self, value):
+        if isinstance(value, Director):
+            self._director = value
+            self._id_director = value.id
+        elif isinstance(value, int):
+            self._director = None
+            self._id_director = value
+        else:
+            raise TypeError(f"{value} debe ser un entero o instancia de Director")
 
 class DAO(ABC):
     """
