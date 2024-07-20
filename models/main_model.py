@@ -7,7 +7,7 @@ class Model(ABC):
     def create_from_dict(cls, diccionario):
         pass
 
-class Director:
+class Director(Model):
     @classmethod
     def create_from_dict(cls, diccionario):
         return cls(diccionario["nombre"], int(diccionario["id"]))
@@ -26,15 +26,16 @@ class Director:
     
     def __hash__(self):
         return hash((self.id, self.nombre))
-    
-class Pelicula:
+
+
+class Pelicula(Model):
     @classmethod
     def create_from_dict(cls, diccionario):
         return cls(diccionario["titulo"], 
                    diccionario["sinopsis"], 
                    int(diccionario["director_id"]), 
                    int(diccionario["id"]))
-
+    
     def __init__(self, titulo: str, sinopsis: str, director: object, id = -1):
         self.titulo = titulo
         self.sinopsis = sinopsis
@@ -67,6 +68,7 @@ class Pelicula:
     def __repr__(self):
         return f"Pelicula ({self.id}): {self.titulo}, {self.director}"
 
+
 class DAO(ABC):
     """
     @abstractmethod
@@ -87,9 +89,8 @@ class DAO(ABC):
     """
 
     @abstractmethod
-    def findAll(self):
+    def todos(self):
         pass
-
 
 class DAO_CSV(DAO):
     model = None
@@ -97,18 +98,16 @@ class DAO_CSV(DAO):
     def __init__(self, path):
         self.path = path
 
-    def findAll(self):
+    def todos(self):
         with open(self.path, "r", newline="", encoding="utf-8") as fichero:
             lector_csv = csv.DictReader(fichero, delimiter=";", quotechar="'")
             lista = []
             for registro in lector_csv:
-                lista.append(Director.create_from_dict(registro))
-        return lista 
+                lista.append(self.model.create_from_dict(registro))
+        return lista     
 
 class DAO_CSV_Director(DAO_CSV):
     model = Director
 
 class DAO_CSV_Pelicula(DAO_CSV):
     model = Pelicula
-
-class
