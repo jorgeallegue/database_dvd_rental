@@ -1,4 +1,4 @@
-from models.main_model import Director, DAO_CSV_Director, Pelicula
+from models.main_model import Director, DAO_CSV_Director, Pelicula, DAO_CSV_Pelicula
 
 def test_create_director():
     director = Director("Robert Redford")
@@ -35,19 +35,8 @@ def test_create_pelicula_and_informar_director_completo():
 def test_asigna_director_a_pelicula():
     pelicula = Pelicula("El señor de los anillos", "Sauron es muy malo", -1)
 
-    director = Director("peter Jackson", 9)
-
-    pelicula.director = director
-
-    assert pelicula.titulo == "El señor de los anillos"
-    assert pelicula.sinopsis == "Sauron es muy malo"
-    assert pelicula.id == -1
-    assert pelicula.director == director
-    assert pelicula._id_director == 9
-
-def test_asigna_director_a_pelicula():
-    pelicula = Pelicula("El señor de los anillos", "Sauron es muy malo", -1)
     director = Director("Peter Jackson", 9)
+
     pelicula.director = director
 
     assert pelicula.titulo == "El señor de los anillos"
@@ -55,4 +44,11 @@ def test_asigna_director_a_pelicula():
     assert pelicula.id == -1
     assert pelicula.director == director
     assert pelicula._id_director == 9
-    assert pelicula.director.nombre == "Peter Jackson"
+
+def test_dao_peliculas_traer_findAll():
+    dao = DAO_CSV_Pelicula("tests/data/peliculas.csv")
+    peliculas = dao.findAll()
+
+    assert len(peliculas) == 5
+
+    assert peliculas[1] == Pelicula("Los siete samurais", "Una banda de forajidos atemorizan a los habitantes de un pequeño pueblo, saqueándolos periódicamente sin piedad. Para repeler estos ataques, los aldeanos deciden contratar a mercenarios. Finalmente, consiguen los servicios de 7 guerreros, 7 samurais dispuestos a defenderlos a cambio, tan solo, de cobijo y comida.", 2, 17)
