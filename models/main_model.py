@@ -56,6 +56,21 @@ class Pelicula(Model):
             self._id_director = value
         else:
             raise TypeError(f"{value} debe ser un entero o instancia de Director")
+    
+    @property
+    def genero(self):
+        return self._genero
+    
+    @genero.setter
+    def genero(self, value):
+        if isinstance(value, Genero):
+            self._genero = value
+            self._id_genero = value.id
+        elif isinstance(value, int):
+            self._genero = None
+            self._id_genero = value
+        else:
+            raise TypeError(f"{value} debe ser un entero o instancia de Genero")
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -68,6 +83,25 @@ class Pelicula(Model):
     def __repr__(self):
         return f"Pelicula ({self.id}): {self.titulo}, {self.director}"
 
+class Genero(Model):
+    @classmethod
+    def create_from_dict(cls, diccionario):
+        return cls(diccionario["genero"], int(diccionario["id"]))
+
+    def __init__(self, genero: str, id: int = -1):
+        self.genero = genero
+        self.id = id
+
+    def __repr__(self) -> str:
+        return f"Genero ({self.id}): {self.genero}"
+    
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, self.__class__):
+            return self.id == other.id and self.genero == other.genero
+        return False
+    
+    def __hash__(self):
+        return hash((self.id, self.genero))
 
 class DAO(ABC):
     """
@@ -111,3 +145,6 @@ class DAO_CSV_Director(DAO_CSV):
 
 class DAO_CSV_Pelicula(DAO_CSV):
     model = Pelicula
+
+class DAO_CSV_Genero(DAO_CSV):
+    model = Genero
